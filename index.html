@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -59,8 +60,8 @@
     "react": "https://esm.sh/react@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.263.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
@@ -71,99 +72,150 @@
     <script type="text/babel" data-type="module">
         import React, { useState, useMemo, useEffect } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { Search, ExternalLink, Bookmark, Hash, Globe, Sparkles, Moon, Sun, Grid, List, Copy, Check, Heart, X, Plus, Trash2, FolderPlus } from 'lucide-react';
+        import { Search, ExternalLink, Bookmark, Hash, Globe, Sparkles, Moon, Sun, Grid, List, Copy, Check, Heart, X, Plus, Trash2, FolderPlus, Monitor, ShoppingCart, CreditCard, BookOpen, Plane, Coffee } from 'lucide-react';
 
         // --- DATA ---
         const DEFAULT_CATEGORIES = [
           '전체',
           '즐겨찾기',
-          'AI/도구',
           '공공/민원',
+          '금융/보험',
           '생활/편의',
-          '금융/부동산',
-          '쇼핑/여행',
+          '쇼핑/마켓',
+          '여행/교통',
           '취업/직장',
-          '미디어/OTT',
-          '개발/IT',
+          '미디어/정보',
+          'IT/툴',
           '디자인',
-          '학습',
+          '교육/학습',
+          '커뮤니티',
           '기타'
         ];
 
         const SITES = [
-          // AI/도구
-          { id: 'chatgpt', name: 'ChatGPT', description: 'OpenAI의 대화형 AI, 글쓰기, 코딩, 번역 등 다용도 활용', url: 'https://chat.openai.com/', category: 'AI/도구', tags: ['AI', '챗봇', 'GPT'], popular: true },
-          { id: 'gemini', name: 'Gemini', description: 'Google의 멀티모달 AI, 텍스트, 이미지, 영상 처리', url: 'https://gemini.google.com/', category: 'AI/도구', tags: ['구글', 'AI', '바드'], popular: true },
-          { id: 'claude', name: 'Claude', description: 'Anthropic의 AI, 자연스러운 한국어 대화와 긴 문맥 이해', url: 'https://claude.ai/', category: 'AI/도구', tags: ['AI', '글쓰기', '요약'] },
-          { id: 'deepl', name: 'DeepL', description: '세계에서 가장 정확한 AI 번역기', url: 'https://www.deepl.com/', category: 'AI/도구', tags: ['번역', '영어', 'AI'], popular: true },
-          { id: 'perplexity', name: 'Perplexity', description: '출처를 제공하는 실시간 AI 검색 엔진', url: 'https://www.perplexity.ai/', category: 'AI/도구', tags: ['검색', '질문', 'AI'] },
-          { id: 'wrtn', name: '뤼튼', description: '한국어 특화 생성형 AI 포털 서비스', url: 'https://wrtn.ai/', category: 'AI/도구', tags: ['한국어', '챗봇', '창작'] },
-          { id: 'lilys', name: '릴리스', description: '유튜브 영상 요약 및 블로그 글 생성 AI', url: 'https://lilys.ai/', category: 'AI/도구', tags: ['유튜브', '요약', '블로그'] },
+          // 공공/민원 (15)
+          { id: 'gov24', name: '정부24', description: '주민등록등본, 전입신고 등 24시간 민원', url: 'https://www.gov.kr/', category: '공공/민원', tags: ['등본', '행정'], popular: true },
+          { id: 'hometax', name: '국세청 홈택스', description: '세금 신고/납부, 연말정산, 현금영수증', url: 'https://www.hometax.go.kr/', category: '공공/민원', tags: ['세금', '연말정산'] },
+          { id: 'efine', name: '경찰청 이파인', description: '교통범칙금, 과태료, 운전면허 조회', url: 'https://www.efine.go.kr/', category: '공공/민원', tags: ['과태료', '면허'] },
+          { id: 'internet-post', name: '인터넷우체국', description: '우편번호 검색, 택배 예약, 등기 조회', url: 'https://www.epost.go.kr/', category: '공공/민원', tags: ['우편', '배송'] },
+          { id: 'scourt', name: '대법원 인터넷등기소', description: '부동산 등기부등본 열람 및 발급', url: 'http://www.iros.go.kr/', category: '공공/민원', tags: ['등기', '부동산'] },
+          { id: 'passport', name: '여권안내 홈페이지', description: '여권 발급 신청 및 유효기간 만료 알림', url: 'https://www.passport.go.kr/', category: '공공/민원', tags: ['여권', '여행'] },
+          { id: 'worknet', name: '워크넷', description: '고용노동부 채용정보 및 실업급여', url: 'https://www.work.go.kr/', category: '공공/민원', tags: ['구직', '실업급여'] },
+          { id: 'ei-go', name: '고용보험', description: '실업급여 신청, 모성보호 지원금', url: 'https://www.ei.go.kr/', category: '공공/민원', tags: ['보험', '급여'] },
+          { id: 'nhis', name: '국민건강보험', description: '건강검진 대상조회, 보험료 납부', url: 'https://www.nhis.or.kr/', category: '공공/민원', tags: ['건강', '보험'] },
+          { id: 'nps', name: '국민연금', description: '가입내역 조회, 예상 연금액 모의계산', url: 'https://www.nps.or.kr/', category: '공공/민원', tags: ['연금', '노후'] },
+          { id: 'wetax', name: '위택스', description: '지방세 신고·납부, 자동차세 연납', url: 'https://www.wetax.go.kr/', category: '공공/민원', tags: ['세금', '지방세'] },
+          { id: 'bokjiro', name: '복지로', description: '나에게 맞는 복지서비스 찾기 및 신청', url: 'https://www.bokjiro.go.kr/', category: '공공/민원', tags: ['복지', '지원금'] },
+          { id: 'studyms', name: '나이스 대국민서비스', description: '자녀 학교생활기록부, 성적표 조회', url: 'https://www.neis.go.kr/', category: '공공/민원', tags: ['학교', '교육'] },
+          { id: 'lost112', name: '경찰청 유실물센터', description: '분실물 신고 및 습득물 검색', url: 'https://www.lost112.go.kr/', category: '공공/민원', tags: ['분실물', '경찰'] },
+          { id: 'koroad', name: '안전운전 통합민원', description: '운전면허 발급/갱신, 국제면허 신청', url: 'https://www.safedriving.or.kr/', category: '공공/민원', tags: ['면허', '운전'] },
 
-          // 공공/민원
-          { id: 'gov24', name: '정부24', description: '주민등록등본, 전입신고 등 24시간 민원 서비스', url: 'https://www.gov.kr/', category: '공공/민원', tags: ['등본', '행정', '민원'], popular: true },
-          { id: 'hometax', name: '국세청 홈택스', description: '세금 신고/납부, 연말정산, 현금영수증 조회', url: 'https://www.hometax.go.kr/', category: '공공/민원', tags: ['세금', '연말정산', '사업자'] },
-          { id: 'efine', name: '경찰청 이파인', description: '교통범칙금, 과태료 조회 및 납부, 운전면허 조회', url: 'https://www.efine.go.kr/', category: '공공/민원', tags: ['경찰', '과태료', '면허'] },
-          { id: 'internet-post', name: '인터넷우체국', description: '우편번호 검색, 택배 예약, 등기 조회', url: 'https://www.epost.go.kr/', category: '공공/민원', tags: ['우편', '택배', '배송'] },
-          { id: 'scourt', name: '대법원 인터넷등기소', description: '부동산 등기부등본 열람 및 발급, 법인 등기', url: 'http://www.iros.go.kr/', category: '공공/민원', tags: ['등기', '부동산', '법원'] },
-          { id: 'korea-pass', name: '여권안내 홈페이지', description: '여권 발급 신청, 유효기간 만료 사전 알림', url: 'https://www.passport.go.kr/', category: '공공/민원', tags: ['여권', '여행', '외교부'] },
+          // 금융/보험 (12)
+          { id: 'fine', name: '파인', description: '금융소비자포털, 내 계좌 한눈에, 잠자는 돈 찾기', url: 'https://fine.fss.or.kr/', category: '금융/보험', tags: ['금융', '예금'], popular: true },
+          { id: 'card-point', name: '카드포인트 통합조회', description: '모든 카드 포인트 통합 조회 및 계좌 입금', url: 'https://www.cardpoint.or.kr/', category: '금융/보험', tags: ['포인트', '현금'] },
+          { id: 'toss', name: '토스', description: '간편 송금, 무료 신용조회, 만보기', url: 'https://toss.im/', category: '금융/보험', tags: ['송금', '은행'] },
+          { id: 'kakaobank', name: '카카오뱅크', description: '모바일 제일 은행, 26주 적금', url: 'https://www.kakaobank.com/', category: '금융/보험', tags: ['은행', '모바일'] },
+          { id: 'kbstar', name: 'KB국민은행', description: '국민은행 인터넷뱅킹', url: 'https://www.kbstar.com/', category: '금융/보험', tags: ['은행'] },
+          { id: 'shinhan', name: '신한은행', description: '신한은행 인터넷뱅킹', url: 'https://www.shinhan.com/', category: '금융/보험', tags: ['은행'] },
+          { id: 'woori', name: '우리은행', description: '우리은행 인터넷뱅킹', url: 'https://www.wooribank.com/', category: '금융/보험', tags: ['은행'] },
+          { id: 'hana', name: '하나은행', description: '하나은행 인터넷뱅킹', url: 'https://www.kebhana.com/', category: '금융/보험', tags: ['은행'] },
+          { id: 'bok', name: '한국은행 경제통계', description: '환율, 기준금리, 물가 지표 확인', url: 'https://ecos.bok.or.kr/', category: '금융/보험', tags: ['경제', '통계'] },
+          { id: 'insure-clinic', name: '내보험다보여', description: '가입한 모든 보험 내역 일괄 조회', url: 'https://credit4u.or.kr/', category: '금융/보험', tags: ['보험', '조회'] },
+          { id: 'kfb', name: '은행연합회 소비자포털', description: '예금/대출 금리 비교 공시', url: 'https://portal.kfb.or.kr/', category: '금융/보험', tags: ['금리', '비교'] },
+          { id: 'loan-dream', name: '서민금융진흥원', description: '햇살론 등 서민 금융 지원 안내', url: 'https://www.kinfa.or.kr/', category: '금융/보험', tags: ['대출', '지원'] },
 
-          // 생활/편의
-          { id: 'naver-map', name: '네이버 지도', description: '길찾기, 대중교통 정보, 내비게이션, 거리뷰', url: 'https://map.naver.com/', category: '생활/편의', tags: ['지도', '교통', '길찾기'], popular: true },
-          { id: 'kakao-map', name: '카카오맵', description: '실시간 버스/지하철 위치, 로드뷰, 맛집 리뷰', url: 'https://map.kakao.com/', category: '생활/편의', tags: ['지도', '내비', '교통'] },
-          { id: 'papago', name: '파파고', description: 'AI 기반 다국어 번역 (한국어-영어-일어-중국어)', url: 'https://papago.naver.com/', category: '생활/편의', tags: ['번역', '어학', '영어'], popular: true },
-          { id: 'naver-clock', name: '네이버 시계', description: '수강신청, 티켓팅 필수! 초 단위 서버 시간', url: 'https://time.naver.com/', category: '생활/편의', tags: ['시계', '티켓팅', '시간'] },
-          { id: 'kma', name: '기상청 날씨누리', description: '공식 일기예보, 태풍, 지진, 미세먼지 정보', url: 'https://www.weather.go.kr/', category: '생활/편의', tags: ['날씨', '기상', '예보'] },
-          { id: 'customs', name: '관세청 유니패스', description: '해외직구 통관 조회, 개인통관고유부호 발급', url: 'https://unipass.customs.go.kr/', category: '생활/편의', tags: ['직구', '통관', '관세'] },
-          { id: 'lottery', name: '동행복권', description: '로또, 연금복권 인터넷 구매 및 당첨 확인', url: 'https://dhlottery.co.kr/', category: '생활/편의', tags: ['로또', '복권', '운'] },
+          // 생활/편의 (10)
+          { id: 'naver-map', name: '네이버 지도', description: '길찾기, 내비게이션, 거리뷰, 맛집', url: 'https://map.naver.com/', category: '생활/편의', tags: ['지도', '교통'], popular: true },
+          { id: 'kakao-map', name: '카카오맵', description: '실시간 버스/지하철, 로드뷰', url: 'https://map.kakao.com/', category: '생활/편의', tags: ['지도', '교통'] },
+          { id: 'kma', name: '기상청 날씨누리', description: '공식 일기예보, 미세먼지, 지진 정보', url: 'https://www.weather.go.kr/', category: '생활/편의', tags: ['날씨', '예보'] },
+          { id: 'naver-clock', name: '네이버 시계', description: '수강신청, 티켓팅 초 단위 서버 시간', url: 'https://time.naver.com/', category: '생활/편의', tags: ['시계', '티켓팅'] },
+          { id: 'papago', name: '파파고', description: 'AI 다국어 번역 (한/영/일/중)', url: 'https://papago.naver.com/', category: '생활/편의', tags: ['번역', '영어'], popular: true },
+          { id: 'hogangnono', name: '호갱노노', description: '아파트 실거래가 및 시세 지도', url: 'https://hogangnono.com/', category: '생활/편의', tags: ['부동산', '아파트'] },
+          { id: 'naver-land', name: '네이버 부동산', description: '전세, 월세, 매매 매물 확인', url: 'https://land.naver.com/', category: '생활/편의', tags: ['부동산', '매물'] },
+          { id: 'customs', name: '관세청 유니패스', description: '해외직구 통관 조회, 개인통관부호', url: 'https://unipass.customs.go.kr/', category: '생활/편의', tags: ['통관', '직구'] },
+          { id: 'lottery', name: '동행복권', description: '로또, 연금복권 인터넷 구매', url: 'https://dhlottery.co.kr/', category: '생활/편의', tags: ['복권', '로또'] },
+          { id: 'hira', name: '건강보험심사평가원', description: '주변 병원/약국 찾기, 비급여 진료비', url: 'https://www.hira.or.kr/', category: '생활/편의', tags: ['병원', '약국'] },
 
-          // 금융/부동산
-          { id: 'hogangnono', name: '호갱노노', description: '아파트 실거래가, 시세 지도, 입주민 이야기', url: 'https://hogangnono.com/', category: '금융/부동산', tags: ['부동산', '아파트', '시세'], popular: true },
-          { id: 'naver-land', name: '네이버 부동산', description: '부동산 매물 확인, 분양 정보, 시세 조회', url: 'https://land.naver.com/', category: '금융/부동산', tags: ['매물', '전세', '월세'] },
-          { id: 'fine', name: '파인 (금융소비자포털)', description: '잠자는 내 돈 찾기, 카드 포인트 통합 조회', url: 'https://fine.fss.or.kr/', category: '금융/부동산', tags: ['금융', '예금', '보험'] },
-          { id: 'card-point', name: '카드포인트 통합조회', description: '여신금융협회 카드 포인트 통합 조회 및 계좌 입금', url: 'https://www.cardpoint.or.kr/', category: '금융/부동산', tags: ['카드', '돈', '포인트'] },
-          { id: 'bok', name: '한국은행 경제통계', description: '환율, 금리, 물가 등 주요 경제 지표 확인', url: 'https://ecos.bok.or.kr/', category: '금융/부동산', tags: ['경제', '환율', '통계'] },
-          { id: 'toss', name: '토스', description: '간편 송금, 금융 현황 파악, 만보기', url: 'https://toss.im/', category: '금융/부동산', tags: ['금융', '은행', '송금'] },
+          // 쇼핑/마켓 (10)
+          { id: 'coupang', name: '쿠팡', description: '로켓배송, 새벽배송 쇼핑몰', url: 'https://www.coupang.com/', category: '쇼핑/마켓', tags: ['쇼핑', '배송'], popular: true },
+          { id: 'naver-shopping', name: '네이버 쇼핑', description: '가격비교 및 스마트스토어', url: 'https://shopping.naver.com/', category: '쇼핑/마켓', tags: ['비교', '검색'] },
+          { id: 'danawa', name: '다나와', description: 'PC, 가전, 전자제품 최저가 비교', url: 'https://www.danawa.com/', category: '쇼핑/마켓', tags: ['가전', 'PC'] },
+          { id: 'kurly', name: '마켓컬리', description: '식재료 새벽배송, 샛별배송', url: 'https://www.kurly.com/', category: '쇼핑/마켓', tags: ['식품', '배송'] },
+          { id: 'ssg', name: 'SSG닷컴', description: '이마트, 신세계백화점 통합몰', url: 'https://www.ssg.com/', category: '쇼핑/마켓', tags: ['장보기', '백화점'] },
+          { id: 'musinsa', name: '무신사', description: '국내 최대 패션 편집숍', url: 'https://www.musinsa.com/', category: '쇼핑/마켓', tags: ['패션', '의류'] },
+          { id: 'zigzag', name: '지그재그', description: '여성 쇼핑몰 모음 앱/웹', url: 'https://zigzag.kr/', category: '쇼핑/마켓', tags: ['패션', '여성'] },
+          { id: 'joongna', name: '중고나라', description: '국내 최대 중고 거래 커뮤니티', url: 'https://web.joongna.com/', category: '쇼핑/마켓', tags: ['중고', '거래'] },
+          { id: 'ppomppu', name: '뽐뿌', description: '핫딜 정보, 휴대폰 가격 정보', url: 'https://www.ppomppu.co.kr/', category: '쇼핑/마켓', tags: ['핫딜', '정보'] },
+          { id: 'algumon', name: '알구몬', description: '실시간 핫딜 모음 알리미', url: 'https://algumon.com/', category: '쇼핑/마켓', tags: ['할인', '핫딜'] },
 
-          // 쇼핑/여행
-          { id: 'danawa', name: '다나와', description: '컴퓨터, 가전, 자동차 등 최저가 가격비교', url: 'https://www.danawa.com/', category: '쇼핑/여행', tags: ['가격비교', '쇼핑', '최저가'], popular: true },
-          { id: 'ppomppu', name: '뽐뿌', description: '가성비 정보, 핫딜, 휴대폰 포럼', url: 'https://www.ppomppu.co.kr/', category: '쇼핑/여행', tags: ['커뮤니티', '핫딜', '정보'] },
-          { id: 'korail', name: '레츠코레일', description: 'KTX, 새마을, 무궁화호 기차 예매', url: 'https://www.letskorail.com/', category: '쇼핑/여행', tags: ['기차', 'KTX', '여행'], popular: true },
-          { id: 'skyscanner', name: '스카이스캐너', description: '전 세계 항공권, 호텔, 렌터카 최저가 비교', url: 'https://www.skyscanner.co.kr/', category: '쇼핑/여행', tags: ['항공권', '여행', '해외'] },
-          { id: 'joonggonara', name: '중고나라', description: '대한민국 최대 중고 거래 플랫폼', url: 'https://web.joongna.com/', category: '쇼핑/여행', tags: ['중고', '거래', '장터'] },
-          { id: 'coupang', name: '쿠팡', description: '빠른 배송, 로켓배송, 생필품 구매', url: 'https://www.coupang.com/', category: '쇼핑/여행', tags: ['쇼핑', '배송', '마켓'] },
+          // 여행/교통 (8)
+          { id: 'korail', name: '레츠코레일', description: 'KTX 기차표 예매', url: 'https://www.letskorail.com/', category: '여행/교통', tags: ['기차', 'KTX'], popular: true },
+          { id: 'srt', name: 'SRT 예매', description: '수서고속철도 승차권 예매', url: 'https://etk.srail.kr/', category: '여행/교통', tags: ['기차', 'SRT'] },
+          { id: 'kobus', name: '코버스', description: '고속버스 통합 예매', url: 'https://www.kobus.co.kr/', category: '여행/교통', tags: ['버스', '예매'] },
+          { id: 'skyscanner', name: '스카이스캐너', description: '최저가 항공권 비교 검색', url: 'https://www.skyscanner.co.kr/', category: '여행/교통', tags: ['항공', '여행'] },
+          { id: 'agoda', name: '아고다', description: '전세계 호텔 및 숙소 예약', url: 'https://www.agoda.com/', category: '여행/교통', tags: ['숙박', '호텔'] },
+          { id: 'airbnb', name: '에어비앤비', description: '감성 숙소 및 공유 숙박', url: 'https://www.airbnb.co.kr/', category: '여행/교통', tags: ['숙소', '여행'] },
+          { id: 'myrealtrip', name: '마이리얼트립', description: '여행 가이드, 투어, 티켓 예약', url: 'https://www.myrealtrip.com/', category: '여행/교통', tags: ['투어', '티켓'] },
+          { id: 'tripadvisor', name: '트립어드바이저', description: '여행지 맛집 및 호텔 리뷰', url: 'https://www.tripadvisor.co.kr/', category: '여행/교통', tags: ['리뷰', '정보'] },
 
-          // 취업/직장
-          { id: 'saramin', name: '사람인', description: '채용 공고, 연봉 정보, 이력서 컨설팅', url: 'https://www.saramin.co.kr/', category: '취업/직장', tags: ['취업', '채용', '구인'], popular: true },
-          { id: 'jobkorea', name: '잡코리아', description: '취업, 알바, 채용 정보 및 기업 분석', url: 'https://www.jobkorea.co.kr/', category: '취업/직장', tags: ['취업', '이직', '공채'] },
-          { id: 'wanted', name: '원티드', description: '디지털 직군 추천 채용, 연봉 데이터', url: 'https://www.wanted.co.kr/', category: '취업/직장', tags: ['스타트업', '개발', '이직'] },
-          { id: 'blind', name: '블라인드', description: '직장인 익명 커뮤니티, 회사 리뷰', url: 'https://www.teamblind.com/kr/', category: '취업/직장', tags: ['커뮤니티', '리뷰', '연봉'] },
-          { id: 'jumpit', name: '점핏', description: '개발자 전용 취업 플랫폼', url: 'https://www.jumpit.co.kr/', category: '취업/직장', tags: ['개발자', 'IT', '취업'] },
+          // 취업/직장 (8)
+          { id: 'saramin', name: '사람인', description: '채용 공고, 연봉, 이력서', url: 'https://www.saramin.co.kr/', category: '취업/직장', tags: ['구인', '채용'], popular: true },
+          { id: 'jobkorea', name: '잡코리아', description: '취업 포털, 기업 공채 정보', url: 'https://www.jobkorea.co.kr/', category: '취업/직장', tags: ['구인', '취업'] },
+          { id: 'wanted', name: '원티드', description: '스타트업 및 디지털 직군 채용', url: 'https://www.wanted.co.kr/', category: '취업/직장', tags: ['이직', 'IT'] },
+          { id: 'blind', name: '블라인드', description: '직장인 익명 커뮤니티', url: 'https://www.teamblind.com/kr/', category: '취업/직장', tags: ['커뮤니티', '리뷰'] },
+          { id: 'albamon', name: '알바몬', description: '아르바이트 구인구직', url: 'https://www.albamon.com/', category: '취업/직장', tags: ['알바', '파트타임'] },
+          { id: 'albaheaven', name: '알바천국', description: '알바 구인구직 포털', url: 'http://www.alba.co.kr/', category: '취업/직장', tags: ['알바'] },
+          { id: 'jobplanet', name: '잡플래닛', description: '기업 리뷰, 연봉, 면접 정보', url: 'https://www.jobplanet.co.kr/', category: '취업/직장', tags: ['리뷰', '평가'] },
+          { id: 'jumpit', name: '점핏', description: '개발자 전용 채용 플랫폼', url: 'https://www.jumpit.co.kr/', category: '취업/직장', tags: ['개발', 'IT'] },
 
-          // 미디어/OTT
-          { id: 'netflix', name: '넷플릭스', description: '전 세계 1위 OTT 스트리밍 서비스', url: 'https://www.netflix.com/kr/', category: '미디어/OTT', tags: ['영화', '드라마', 'OTT'], popular: true },
-          { id: 'youtube', name: '유튜브', description: '동영상 공유 플랫폼, 강의, 엔터테인먼트', url: 'https://www.youtube.com/', category: '미디어/OTT', tags: ['영상', '강의', '음악'] },
-          { id: 'namuwiki', name: '나무위키', description: '한국어 위키, 다양한 분야의 정보와 지식', url: 'https://namu.wiki/', category: '미디어/OTT', tags: ['위키', '백과', '정보'] },
-          { id: 'tving', name: '티빙', description: 'tvN, JTBC 등 국내 방송 다시보기 및 실시간', url: 'https://www.tving.com/', category: '미디어/OTT', tags: ['방송', '예능', '드라마'] },
-          { id: 'wavve', name: '웨이브', description: '지상파 3사 방송 다시보기 및 실시간 TV', url: 'https://www.wavve.com/', category: '미디어/OTT', tags: ['방송', 'TV', '예능'] },
-          { id: 'watcha', name: '왓챠', description: '영화 드라마 추천 및 감상', url: 'https://watcha.com/', category: '미디어/OTT', tags: ['영화', '평점', '추천'] },
+          // 미디어/정보 (10)
+          { id: 'namuwiki', name: '나무위키', description: '한국어 집단지성 백과사전', url: 'https://namu.wiki/', category: '미디어/정보', tags: ['위키', '지식'], popular: true },
+          { id: 'youtube', name: '유튜브', description: '동영상 플랫폼', url: 'https://www.youtube.com/', category: '미디어/정보', tags: ['영상', '음악'] },
+          { id: 'netflix', name: '넷플릭스', description: '영화 드라마 스트리밍', url: 'https://www.netflix.com/', category: '미디어/정보', tags: ['OTT', '영화'] },
+          { id: 'tving', name: '티빙', description: 'CJ 계열 방송 및 영화', url: 'https://www.tving.com/', category: '미디어/정보', tags: ['OTT', '방송'] },
+          { id: 'wavve', name: '웨이브', description: '지상파 3사 방송 다시보기', url: 'https://www.wavve.com/', category: '미디어/정보', tags: ['OTT', 'TV'] },
+          { id: 'watcha', name: '왓챠', description: '영화 추천 및 감상', url: 'https://watcha.com/', category: '미디어/정보', tags: ['OTT', '영화'] },
+          { id: 'laftel', name: '라프텔', description: '애니메이션 스트리밍 서비스', url: 'https://laftel.net/', category: '미디어/정보', tags: ['애니', '만화'] },
+          { id: 'naver-news', name: '네이버 뉴스', description: '실시간 주요 뉴스 속보', url: 'https://news.naver.com/', category: '미디어/정보', tags: ['뉴스', '속보'] },
+          { id: 'riss', name: 'RISS', description: '학술연구정보, 논문 검색', url: 'http://www.riss.kr/', category: '미디어/정보', tags: ['논문', '연구'] },
+          { id: 'dbpia', name: 'DBpia', description: '국내 학술 논문 및 저널', url: 'https://www.dbpia.co.kr/', category: '미디어/정보', tags: ['논문', '학술'] },
 
-          // 개발/IT
-          { id: 'github', name: 'GitHub', description: '세계 최대의 오픈소스 코드 저장소', url: 'https://github.com/', category: '개발/IT', tags: ['개발', '코드', '오픈소스'] },
-          { id: 'stackoverflow', name: 'Stack Overflow', description: '개발자들의 질문답변 커뮤니티', url: 'https://stackoverflow.com/', category: '개발/IT', tags: ['개발', '질문', '버그'] },
-          { id: 'programmers', name: '프로그래머스', description: '개발자 채용, 코딩 테스트 연습', url: 'https://programmers.co.kr/', category: '개발/IT', tags: ['코딩', '테스트', '교육'] },
+          // IT/툴 (10)
+          { id: 'chatgpt', name: 'ChatGPT', description: 'OpenAI 대화형 인공지능', url: 'https://chat.openai.com/', category: 'IT/툴', tags: ['AI', 'GPT'], popular: true },
+          { id: 'gemini', name: 'Gemini', description: 'Google 멀티모달 AI', url: 'https://gemini.google.com/', category: 'IT/툴', tags: ['구글', 'AI'] },
+          { id: 'deepl', name: 'DeepL', description: '자연스러운 AI 번역기', url: 'https://www.deepl.com/', category: 'IT/툴', tags: ['번역', 'AI'] },
+          { id: 'github', name: 'GitHub', description: '코드 저장소 및 협업', url: 'https://github.com/', category: 'IT/툴', tags: ['개발', '코드'] },
+          { id: 'stackoverflow', name: 'Stack Overflow', description: '개발자 질문 답변 커뮤니티', url: 'https://stackoverflow.com/', category: 'IT/툴', tags: ['개발', '질문'] },
+          { id: 'notion', name: 'Notion', description: '올인원 워크스페이스, 메모', url: 'https://www.notion.so/', category: 'IT/툴', tags: ['노트', '협업'] },
+          { id: 'figma', name: 'Figma', description: 'UI/UX 디자인 협업 툴', url: 'https://www.figma.com/', category: 'IT/툴', tags: ['디자인', 'UI'] },
+          { id: 'canva', name: 'Canva', description: '쉬운 온라인 디자인 툴', url: 'https://www.canva.com/', category: 'IT/툴', tags: ['디자인', '편집'] },
+          { id: 'smallpdf', name: 'SmallPDF', description: 'PDF 변환, 압축, 편집 도구', url: 'https://smallpdf.com/kr', category: 'IT/툴', tags: ['PDF', '문서'] },
+          { id: 'fast', name: 'Fast.com', description: '넷플릭스 제공 인터넷 속도 측정', url: 'https://fast.com/ko/', category: 'IT/툴', tags: ['속도', '인터넷'] },
 
-          // 디자인
-          { id: 'miricanvas', name: '미리캔버스', description: '저작권 걱정 없는 무료 디자인 툴 (PPT, 썸네일)', url: 'https://www.miricanvas.com/', category: '디자인', tags: ['디자인', 'PPT', '템플릿'], popular: true },
-          { id: 'pinterest', name: '핀터레스트', description: '전 세계 디자이너들의 레퍼런스 및 아이디어', url: 'https://www.pinterest.co.kr/', category: '디자인', tags: ['영감', '이미지', '참고'] },
-          { id: 'removebg', name: 'Remove.bg', description: '이미지 배경 제거(누끼 따기) 자동화 툴', url: 'https://www.remove.bg/ko', category: '디자인', tags: ['이미지', '편집', '배경'] },
-          { id: 'figma', name: 'Figma', description: '웹 기반의 실시간 협업 인터페이스 디자인 툴', url: 'https://www.figma.com/', category: '디자인', tags: ['UI', 'UX', '협업'] },
+          // 디자인 (6)
+          { id: 'miricanvas', name: '미리캔버스', description: '무료 디자인 템플릿', url: 'https://www.miricanvas.com/', category: '디자인', tags: ['템플릿', 'PPT'], popular: true },
+          { id: 'mangoboard', name: '망고보드', description: '쉬운 디자인 제작 플랫폼', url: 'https://www.mangoboard.net/', category: '디자인', tags: ['제작', '카드뉴스'] },
+          { id: 'pinterest', name: '핀터레스트', description: '이미지 레퍼런스 및 아이디어', url: 'https://www.pinterest.co.kr/', category: '디자인', tags: ['영감', '이미지'] },
+          { id: 'removebg', name: 'Remove.bg', description: '이미지 배경 자동 제거', url: 'https://www.remove.bg/ko', category: '디자인', tags: ['누끼', '편집'] },
+          { id: 'unsplash', name: 'Unsplash', description: '저작권 무료 고화질 이미지', url: 'https://unsplash.com/', category: '디자인', tags: ['사진', '무료'] },
+          { id: 'flaticon', name: 'Flaticon', description: '무료 벡터 아이콘 다운로드', url: 'https://www.flaticon.com/', category: '디자인', tags: ['아이콘', '벡터'] },
 
-          // 학습
-          { id: 'inflearn', name: '인프런', description: 'IT, 프로그래밍, 업무 스킬 온라인 강의', url: 'https://www.inflearn.com/', category: '학습', tags: ['강의', 'IT', '공부'], popular: true },
-          { id: 'class101', name: '클래스101', description: '취미부터 커리어까지 다양한 온라인 클래스', url: 'https://class101.net/', category: '학습', tags: ['취미', '부업', '클래스'] },
-          { id: 'smallpdf', name: 'SmallPDF', description: 'PDF 변환, 합치기, 압축 등 PDF 관련 툴', url: 'https://smallpdf.com/kr', category: '학습', tags: ['PDF', '문서', '변환'] },
-          { id: 'korean-history', name: '한국사능력검정시험', description: '국사편찬위원회 한국사 시험 접수', url: 'https://www.historyexam.go.kr/', category: '학습', tags: ['자격증', '역사', '시험'] }
+          // 교육/학습 (6)
+          { id: 'inflearn', name: '인프런', description: 'IT 및 실무 온라인 강의', url: 'https://www.inflearn.com/', category: '교육/학습', tags: ['강의', 'IT'], popular: true },
+          { id: 'class101', name: '클래스101', description: '취미, 커리어 온라인 클래스', url: 'https://class101.net/', category: '교육/학습', tags: ['취미', '강의'] },
+          { id: 'udemy', name: '유데미', description: '글로벌 온라인 강의 플랫폼', url: 'https://www.udemy.com/', category: '교육/학습', tags: ['강의', '글로벌'] },
+          { id: 'kmooc', name: 'K-MOOC', description: '한국형 온라인 공개 강좌', url: 'http://www.kmooc.kr/', category: '교육/학습', tags: ['무료', '대학'] },
+          { id: 'ebs', name: 'EBSi', description: '수능, 내신 무료 강의', url: 'https://www.ebsi.co.kr/', category: '교육/학습', tags: ['수능', '공부'] },
+          { id: 'history', name: '한국사능력검정', description: '한국사 시험 접수', url: 'https://www.historyexam.go.kr/', category: '교육/학습', tags: ['자격증', '역사'] },
+
+          // 커뮤니티 (7)
+          { id: 'dcinside', name: '디시인사이드', description: '국내 최대 커뮤니티', url: 'https://www.dcinside.com/', category: '커뮤니티', tags: ['갤러리', '유머'] },
+          { id: 'fmkorea', name: '에펨코리아', description: '종합 유머 축구 커뮤니티', url: 'https://www.fmkorea.com/', category: '커뮤니티', tags: ['유머', '축구'] },
+          { id: 'ruliweb', name: '루리웹', description: '게임, 애니, 취미 커뮤니티', url: 'https://bbs.ruliweb.com/', category: '커뮤니티', tags: ['게임', '취미'] },
+          { id: 'clien', name: '클리앙', description: 'IT 기기 중심 커뮤니티', url: 'https://www.clien.net/', category: '커뮤니티', tags: ['IT', '얼리어답터'] },
+          { id: 'instiz', name: '인스티즈', description: '연예, 이슈 커뮤니티', url: 'https://www.instiz.net/', category: '커뮤니티', tags: ['연예', '이슈'] },
+          { id: 'theqoo', name: '더쿠', description: '이슈, 유머, 연예 정보', url: 'https://theqoo.net/', category: '커뮤니티', tags: ['이슈', '아이돌'] },
+          { id: 'nate-pann', name: '네이트판', description: '일상, 톡톡, 고민상담', url: 'https://pann.nate.com/', category: '커뮤니티', tags: ['썰', '고민'] }
         ];
 
         // --- COMPONENTS ---
@@ -345,14 +397,15 @@
         const getCategoryColor = (category) => {
           if (category === '공공/민원') return 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-300';
           if (category === '생활/편의') return 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-300';
-          if (category === '금융/부동산') return 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300';
-          if (category === '쇼핑/여행') return 'bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300';
+          if (category === '금융/보험') return 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-300';
+          if (category === '쇼핑/마켓') return 'bg-orange-100 text-orange-600 dark:bg-orange-900/50 dark:text-orange-300';
           if (category === '취업/직장') return 'bg-rose-100 text-rose-600 dark:bg-rose-900/50 dark:text-rose-300';
-          if (category === '미디어/OTT') return 'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300';
+          if (category === '미디어/정보') return 'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-300';
           if (category === '디자인') return 'bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-300';
-          if (category === '개발/IT') return 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300';
-          if (category === '학습') return 'bg-teal-100 text-teal-600 dark:bg-teal-900/50 dark:text-teal-300';
-          if (category === 'AI/도구') return 'bg-violet-100 text-violet-600 dark:bg-violet-900/50 dark:text-violet-300';
+          if (category === 'IT/툴') return 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300';
+          if (category === '교육/학습') return 'bg-teal-100 text-teal-600 dark:bg-teal-900/50 dark:text-teal-300';
+          if (category === '여행/교통') return 'bg-sky-100 text-sky-600 dark:bg-sky-900/50 dark:text-sky-300';
+          if (category === '커뮤니티') return 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/50 dark:text-yellow-300';
           return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300';
         };
 
@@ -693,7 +746,11 @@
                         }`}
                       >
                         {category === '즐겨찾기' && <Heart className={`w-3.5 h-3.5 ${selectedCategory === '즐겨찾기' ? 'fill-current' : ''}`} />}
-                        {category === 'AI/도구' && <Sparkles className="w-3.5 h-3.5" />}
+                        {category === 'IT/툴' && <Monitor className="w-3.5 h-3.5" />}
+                        {category === '공공/민원' && <BookOpen className="w-3.5 h-3.5" />}
+                        {category === '쇼핑/마켓' && <ShoppingCart className="w-3.5 h-3.5" />}
+                        {category === '금융/보험' && <CreditCard className="w-3.5 h-3.5" />}
+                        {category === '여행/교통' && <Plane className="w-3.5 h-3.5" />}
                         {category}
                       </button>
                     ))}
@@ -708,7 +765,11 @@
                   <h2 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                     {selectedCategory === '전체' ? <Globe className="w-6 h-6 text-blue-500" /> : 
                      selectedCategory === '즐겨찾기' ? <Heart className="w-6 h-6 text-pink-500 fill-pink-500" /> :
-                     selectedCategory === 'AI/도구' ? <Sparkles className="w-6 h-6 text-purple-500" /> :
+                     selectedCategory === 'IT/툴' ? <Monitor className="w-6 h-6 text-slate-500" /> :
+                     selectedCategory === '공공/민원' ? <BookOpen className="w-6 h-6 text-blue-500" /> :
+                     selectedCategory === '쇼핑/마켓' ? <ShoppingCart className="w-6 h-6 text-orange-500" /> :
+                     selectedCategory === '금융/보험' ? <CreditCard className="w-6 h-6 text-indigo-500" /> :
+                     selectedCategory === '여행/교통' ? <Plane className="w-6 h-6 text-sky-500" /> :
                      <Hash className="w-6 h-6 text-blue-500" />}
                     {selectedCategory}
                     <span className="text-sm font-normal text-gray-500 dark:text-gray-400 ml-2 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
